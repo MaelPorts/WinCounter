@@ -52,46 +52,6 @@ const drawButton = document.getElementById("drawButton");
 const resetButton = document.getElementById("resetButton");
 
 // ==============================
-// TRANSLATION FUNCTIONS
-// ==============================
-
-function updateLanguage(lang) {
-  currentLanguage = lang;
-  localStorage.setItem("language", lang);
-
-  // Update all elements with data-i18n attribute
-  document.querySelectorAll("[data-i18n]").forEach((element) => {
-    const key = element.getAttribute("data-i18n");
-    if (translations[lang][key]) {
-      element.textContent = translations[lang][key];
-    }
-  });
-
-  // Update placeholders
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
-    const key = element.getAttribute("data-i18n-placeholder");
-    if (translations[lang][key]) {
-      element.placeholder = translations[lang][key];
-    }
-  });
-
-  // Update last game message if there was a winner
-  if (
-    gameState.lastWinner === "player1" ||
-    gameState.lastWinner === "player2"
-  ) {
-    updateLastGameMessage(gameState.lastWinner);
-  } else if (gameState.lastWinner === "draw") {
-    updateLastGameMessage("draw");
-  }
-}
-
-// Listen for language change
-languageSelector.addEventListener("change", (e) => {
-  updateLanguage(e.target.value);
-});
-
-// ==============================
 // SETUP SCREEN FUNCTIONALITY
 // ==============================
 
@@ -166,17 +126,11 @@ function updateLastGameMessage(winner) {
   let message = "";
 
   if (winner === "player1") {
-    message = translations[currentLanguage].lastGameWin.replace(
-      "{name}",
-      gameState.player1.name
-    );
+    message = `${gameState.player1.name} won the last game! 🎉`;
   } else if (winner === "player2") {
-    message = translations[currentLanguage].lastGameWin.replace(
-      "{name}",
-      gameState.player2.name
-    );
+    message = `${gameState.player2.name} won the last game! 🎉`;
   } else if (winner === "draw") {
-    message = translations[currentLanguage].lastGameDraw;
+    message = "Last game was a draw!";
   }
 
   // Add animation class
@@ -264,7 +218,4 @@ document.addEventListener("DOMContentLoaded", () => {
   counterScreen.classList.add("hidden");
   setupScreen.classList.remove("hidden");
   player1Input.focus();
-  // Set saved language
-  languageSelector.value = currentLanguage;
-  updateLanguage(currentLanguage);
 });
